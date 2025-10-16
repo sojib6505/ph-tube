@@ -4,6 +4,15 @@ const loadCategory = () => {
     .then((data) => displayCategory(data.categories))
     .catch((err) => console.log(err));
 };
+// ==============
+const vBadesCatagory = (id) => {
+  console.log(id)
+   fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+      .then((res) => res.json())
+      .then((data) => displayVideos(data.category))
+};
+
+
 // vedio load
 const loadVideos = () => {
   fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
@@ -14,6 +23,19 @@ const loadVideos = () => {
 const displayVideos = (videos) => {
   console.log(videos);
   const videoMain = document.getElementById("vedio-main");
+  videoMain.innerHTML = ''
+  if(videos.length === 0){
+    videoMain.classList.remove('grid')
+    videoMain.innerHTML = 
+    `<div class="min-h-[400px] flex flex-col justify-center items-center">
+          <img class="w-[200px]" src="assets/Icon.png"/>
+          <h3 class="font-bold text-xl">Oops!! Sorry, there is no content here</h3>
+    </div>`
+    return
+  }
+  else{
+     videoMain.classList.add('grid')
+  }
   videos.forEach((video) => {
     console.log(video)
     const card = document.createElement("div");
@@ -36,9 +58,6 @@ const displayVideos = (videos) => {
        <p>${video.others.views}</p>
        </div>
      </div>
-     
-      
-     
         `;
     videoMain.appendChild(card)    
   });
@@ -46,13 +65,16 @@ const displayVideos = (videos) => {
 
 const displayCategory = (category) => {
   const btnMain = document.getElementById("btn-container");
-  category.forEach((item) => {
-    const button = document.createElement("button");
-    button.innerText = item.category;
-    button.classList = "btn";
-    btnMain.appendChild(button);
+  category.forEach((item) => {     
+        const btn_container = document.createElement('div')
+        console.log(btn_container)
+       btn_container.innerHTML = `
+        <button id="" onclick="vBadesCatagory(${item.category_id})" class="btn">${item.category}<button>
+       `
+       btnMain.appendChild(btn_container)
   });
 };
+
 
 loadCategory();
 loadVideos();

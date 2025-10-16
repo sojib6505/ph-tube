@@ -27,8 +27,8 @@ const removeActiveClass = () =>{
 
 
 // vedio load
-const loadVideos = () => {
-  fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
+const loadVideos = (searchValue = "") => {
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchValue}`)
     .then((res) => res.json())
     .then((data) => displayVideos(data.videos))
     .catch((err) => console.log(err));
@@ -72,7 +72,7 @@ const displayVideos = (videos) => {
        </div>
      </div>
      <p>
-       <button id="${video.video_id}" onclick="load_Modal(${video.video_id})" class="btn h-7">Detail</button
+       <button id="${video.video_id}" onclick="load_Modal(${video.video_id})" class="btn h-7">Detail </button>
      </p>
         `;
     videoMain.appendChild(card)    
@@ -108,5 +108,10 @@ const displayModal = (video) => {
    `
    document.getElementById('customModal').showModal()
 }
+const input_field = document.getElementById('search-intput')
+input_field.addEventListener('keyup',function(e){
+   const intValue = e.target.value
+   loadVideos(intValue)
+})
 loadCategory();
 loadVideos();

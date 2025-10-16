@@ -9,8 +9,21 @@ const vBadesCatagory = (id) => {
   console.log(id)
    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
       .then((res) => res.json())
-      .then((data) => displayVideos(data.category))
+      .then((data) => {
+        removeActiveClass()
+        const active_btn = document.getElementById(`btn-${id}`)
+        active_btn.classList.add('active')
+        displayVideos(data.category)
+      })
+      .catch((err) => console.error(err))
 };
+
+const removeActiveClass = () =>{
+    const active_btns = document.getElementsByClassName('category-btn')
+    for(let active_btn of active_btns){
+      active_btn.classList.remove('active')
+    }
+}
 
 
 // vedio load
@@ -58,6 +71,9 @@ const displayVideos = (videos) => {
        <p>${video.others.views}</p>
        </div>
      </div>
+     <p>
+       <button id="${video.video_id}" onclick="load_Modal(${video.video_id})" class="btn h-7">Detail</button
+     </p>
         `;
     videoMain.appendChild(card)    
   });
@@ -69,12 +85,28 @@ const displayCategory = (category) => {
         const btn_container = document.createElement('div')
         console.log(btn_container)
        btn_container.innerHTML = `
-        <button id="" onclick="vBadesCatagory(${item.category_id})" class="btn">${item.category}<button>
+        <button id="btn-${item.category_id}" onclick="vBadesCatagory(${item.category_id})" class="btn category-btn">${item.category}<button>
        `
        btnMain.appendChild(btn_container)
   });
 };
 
-
+const load_Modal = async(id) =>{
+    const url = `https://openapi.programming-hero.com/api/phero-tube/video/${id.id}`
+    const res = await fetch(url)
+    const data = await res.json()
+    displayModal(data.video)
+}
+const displayModal = (video) => {
+  console.log(video)
+   const modalContent = document.getElementById('modal-content')
+   console.log(modalContent)
+   modalContent.innerHTML = `
+    <img src="${video.authors[0].profile_picture} " />
+    <h3 class="font-bold">${video.authors[0].profile_name}</h3>
+    <p>${video.description}</p>
+   `
+   document.getElementById('customModal').showModal()
+}
 loadCategory();
 loadVideos();

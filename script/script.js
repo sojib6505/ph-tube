@@ -55,18 +55,21 @@ const displayVideos = (videos) => {
     card.classList = 'card bg-base-100'
     card.innerHTML = `
          <figure class="h-[200px]">
-    <img 
+       <img 
       src=${video.thumbnail}
-      class="w-full h-full object-cover"
+      class="w-full h-full object-cover relative"
       alt="Shoes" />
+      <span class="absolute right-2 bottom-[130px] bg-sky-50 text-xs p-1 font-bold rounded-sm">${video.others.posted_date == ''? '':time(video.others.posted_date)}</span>
   </figure>
      <div class="py-2 flex gap-2">
-       <div><img class="w-10 h-10 rounded-full" src=${video.authors[0].profile_picture} /></div>
+       <div>
+       <img class="w-10 h-10 rounded-full " src=${video.authors[0].profile_picture} />
+       </div>
        <div>
        <p class="font-bold">${video.title}</p>
        <div class="flex items-center gap-2">
             <p>${video.authors[0].profile_name}</p>
-         ${video.authors[0].verified === true ? `<img class="w-4 h-4" src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png" />` : ''}
+               ${video.authors[0].verified === true ? `<img class="w-4 h-4 " src="https://img.icons8.com/?size=48&id=D9RtvkuOe31p&format=png" />` : ''}
        </div>
        <p>${video.others.views}</p>
        </div>
@@ -113,5 +116,12 @@ input_field.addEventListener('keyup',function(e){
    const intValue = e.target.value
    loadVideos(intValue)
 })
+const time =(t) => {
+    const day = t / 3600;
+    const extraSecond = t % 3600;
+    const hour = extraSecond / 60;
+    const second = hour % 60;
+    return `${Math.floor(day)}d ${Math.floor(hour)}h ${Math.floor(second)}s`
+}
 loadCategory();
 loadVideos();
